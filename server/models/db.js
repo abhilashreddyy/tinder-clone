@@ -1,5 +1,7 @@
 const mongoose = require("mongoose")
 
+require('dotenv').config()
+
 module.exports = () =>{
     const connectionParams = {
         useNewURLParser : true,
@@ -10,6 +12,7 @@ module.exports = () =>{
         console.log("Connected to database");
     }catch(error){
         console.log(error)
-        console.log("Could not connect to database! ");
+        console.log("Could not connect to database!");
     }
 }
+
