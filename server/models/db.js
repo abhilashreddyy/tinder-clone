@@ -2,7 +2,8 @@ const mongoose = require("mongoose")
 
 require('dotenv').config()
 
-module.exports = () =>{
+ 
+const connect = () =>{
     const connectionParams = {
         useNewURLParser : true,
         useUnifiedTopology : true,
@@ -16,3 +17,6 @@ module.exports = () =>{
     }
 }
 
+module.exports = {
+    connect : connect,
+}

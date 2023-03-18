@@ -1,15 +1,19 @@
 import { useState } from 'react';
+import {useNavigate} from "react-router-dom";
+
 // import  { Navigate } from 'react-router-dom'
 
 function LoginPage({loginCallback}){
+    var navigate = useNavigate()
     const [data,setData] = useState({
-        username:"a",
-        password:"a"
+        username:"",
+        password:""
     });
     const {username,password} = data;
 
 
     const sendLoginInfo = (event)=>{
+
         event.preventDefault()
         fetch('http://localhost:8000/login', {
         method: 'POST',
@@ -24,8 +28,18 @@ function LoginPage({loginCallback}){
         })
         .then(response => {
             response.json().then((response_body) => {
-                console.log(typeof(loginCallback));
-                loginCallback(response_body)
+                if(response_body.isAuthenticated === true){
+                    navigate("/home")
+                }
+                else{
+                    if(response_body.userExists === false){
+                        navigate("/register")
+                    }
+                    else{
+                        navigate("/login")
+                    }
+                }
+            // loginCallback(response_body)
             })
         })
         .catch(error => {
@@ -34,7 +48,10 @@ function LoginPage({loginCallback}){
     }
 
     const changeHandler = e =>{
-        setData({...data,[e.target.name]:[e.target.value]});
+        setData({
+            ...data, 
+            [e.target.name] : e.target.value,
+        });
     }
 
     return (

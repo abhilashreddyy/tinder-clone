@@ -1,19 +1,44 @@
 const User = require("./schemas/users")
 
-const authenticate = (username, password) => {
+const authenticate = async (username, password) => {
     // User.byEmail
     var authInfo = {
         userExists : false,
         isAuthenticated : false
     }
-    result =  User.userModel.findOne({email : username})
-    if(result.length){
+    result =  await User.userModel.findOne({email : username})
+    console.log(result)
+    if(result){
         authInfo.userExists = true
-        authInfo.authenticate = (result.password == password)
+        authInfo.isAuthenticated = (result.password == password)
     }
     return authInfo
 }
 
-module.exports = {
-    authenticate : authenticate
+
+
+const register = async (userInfo) => {
+    var result =  await User.userModel.findOne({email : userInfo.username})
+    console.log("result for finding ; ", result)
+    if(result){
+        return {userExists : true}
+    }
+    else{
+        result = await User.userModel.create({
+            email : userInfo.username,
+            password : userInfo.password,
+            firstName : userInfo.firstname,
+            lastName : userInfo.lastname
+        })
+        
+        result.userExists = false
+        return result
+    }
+    
 }
+
+module.exports = {
+    authenticate : authenticate,
+    register : register
+}
+
